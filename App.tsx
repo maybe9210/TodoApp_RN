@@ -16,9 +16,6 @@ import ToDo from "./components/ToDo";
 import uuidv1 from "uuid/v1";
 const { height, width } = Dimensions.get("window");
 
-interface Indexable {
-  [key: string]: any;
-}
 interface IToDos {
   [id: string]: any;
 }
@@ -123,7 +120,7 @@ export default class App extends Component<IStates> {
   };
   _deleteToDo = (id: string) => {
     this.setState((prevState: IStates) => {
-      const toDos: Indexable = prevState.toDos;
+      const toDos = prevState.toDos;
       delete toDos[id];
       const newState = {
         ...prevState,
