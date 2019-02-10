@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import * as React from "react";
 import {
   View,
   Text,
@@ -10,20 +10,25 @@ import {
 import PropTypes from "prop-types";
 const { width, height } = Dimensions.get("window");
 
-export default class ToDo extends Component {
-  constructor(props) {
+interface Props {
+  text: string;
+  isCompleted: Function;
+  deleteToDo: Function;
+  id: string;
+  uncompleteToDo: Function;
+  completeToDo: Function;
+  updateToDo: Function;
+}
+
+interface States {
+  isEditing: boolean;
+  toDoValue: string;
+}
+export default class ToDo extends React.Component<Props, States> {
+  constructor(props: Props) {
     super(props);
     this.state = { isEditing: false, toDoValue: props.text };
   }
-  static propTypes = {
-    text: PropTypes.string.isRequired,
-    isCompleted: PropTypes.bool.isRequired,
-    deleteToDo: PropTypes.func.isRequired,
-    id: PropTypes.string.isRequired,
-    uncompleteToDo: PropTypes.func.isRequired,
-    completeToDo: PropTypes.func.isRequired,
-    updateToDo: PropTypes.func.isRequired
-  };
   render() {
     const { isEditing, toDoValue } = this.state;
     const { text, id, deleteToDo, isCompleted } = this.props;
@@ -93,7 +98,7 @@ export default class ToDo extends Component {
       </View>
     );
   }
-  _toggleComplete = event => {
+  _toggleComplete = (event: any) => {
     event.stopPropagation();
     const { isCompleted, uncompleteToDo, completeToDo, id } = this.props;
     if (isCompleted) {
@@ -103,15 +108,14 @@ export default class ToDo extends Component {
     }
   };
 
-  _startEditing = event => {
-    //......
+  _startEditing = (event: any) => {
     event.stopPropagation();
     this.setState({
       isEditing: true
     });
   };
 
-  _finishEditing = event => {
+  _finishEditing = (event: any) => {
     event.stopPropagation();
     const { toDoValue } = this.state;
     const { id, updateToDo } = this.props;
@@ -119,12 +123,12 @@ export default class ToDo extends Component {
     this.setState({ isEditing: false });
   };
 
-  _controllInput = text => {
+  _controllInput = (text: string) => {
     this.setState({ toDoValue: text });
   };
 }
 
-const styles = StyleSheet.create({
+const styles: any = StyleSheet.create({
   container: {
     width: width - 50,
     borderBottomColor: "#bbb",
