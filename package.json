@@ -9,9 +9,12 @@
   "dependencies": {
     "@types/node": "^9.6.7",
     "expo": "^32.0.0",
+    "mobx": "^5.9.0",
+    "mobx-react": "^5.4.3",
     "prop-types": "^15.6.2",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react-navigation": "^3.3.0",
     "typescript": "^3.3.1",
     "uuid": "^3.3.2"
   },
@@ -20,8 +23,11 @@
     "@types/expo__vector-icons": "^9.0.0",
     "@types/react": "^16.8.1",
     "@types/react-native": "^0.57.34",
+    "@types/react-navigation": "^3.0.3",
     "@types/uuid": "^3.4.4",
+    "babel-plugin-transform-decorators-legacy": "^1.3.5",
     "babel-preset-expo": "^5.0.0",
+    "babel-preset-react-native-stage-0": "^1.0.1",
     "react-native-typescript-transformer": "^1.2.11"
   },
   "private": true

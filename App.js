@@ -1,12 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -19,146 +11,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = __importStar(require("react"));
-const react_1 = require("react");
-const react_native_1 = require("react-native");
-const expo_1 = require("expo");
-const ToDo_1 = __importDefault(require("./components/ToDo"));
-const v1_1 = __importDefault(require("uuid/v1"));
-const { height, width } = react_native_1.Dimensions.get("window");
-class App extends react_1.Component {
-    constructor() {
-        super(...arguments);
-        this.state = {
-            newToDo: "",
-            loadedToDos: false,
-            toDos: {}
-        };
-        this.componentDidMount = () => {
-            this._loadToDos();
-        };
-        this._loadToDos = () => __awaiter(this, void 0, void 0, function* () {
-            try {
-                const toDosValue = yield react_native_1.AsyncStorage.getItem("toDos");
-                const toDos = toDosValue || "";
-                const parsedToDos = JSON.parse(toDos);
-                this.setState({ loadedToDos: true, toDos: parsedToDos } || {});
-            }
-            catch (e) {
-                console.log(e);
-            }
-        });
-        this._controlNewToDo = (text) => {
-            this.setState({
-                newToDo: text
-            });
-        };
-        this._addToDo = () => {
-            const { newToDo } = this.state;
-            if (newToDo !== "") {
-                this.setState((prevState) => {
-                    const ID = v1_1.default();
-                    const newToDoObject = {
-                        [ID]: {
-                            id: ID,
-                            isCompleted: false,
-                            text: newToDo,
-                            createdAt: Date.now()
-                        }
-                    };
-                    const newState = Object.assign({}, prevState, { newToDo: "", toDos: Object.assign({}, prevState.toDos, newToDoObject) });
-                    this._saveToDos(newState.toDos);
-                    return Object.assign({}, newState);
-                });
-            }
-        };
-        this._deleteToDo = (id) => {
-            this.setState((prevState) => {
-                const toDos = prevState.toDos;
-                delete toDos[id];
-                const newState = Object.assign({}, prevState, toDos);
-                this._saveToDos(newState.toDos);
-                return Object.assign({}, newState);
-            });
-        };
-        this._uncompleteToDo = (id) => {
-            this.setState((prevState) => {
-                const newState = Object.assign({}, prevState, { toDos: Object.assign({}, prevState.toDos, { [id]: Object.assign({}, prevState.toDos[id], { isCompleted: false }) }) });
-                this._saveToDos(newState.toDos);
-                return Object.assign({}, newState);
-            });
-        };
-        this._completeToDo = (id) => {
-            this.setState((prevState) => {
-                const newState = Object.assign({}, prevState, { toDos: Object.assign({}, prevState.toDos, { [id]: Object.assign({}, prevState.toDos[id], { isCompleted: true }) }) });
-                this._saveToDos(newState.toDos);
-                return Object.assign({}, newState);
-            });
-        };
-        this._updateToDo = (id, text) => {
-            this.setState((prevState) => {
-                const newState = Object.assign({}, prevState, { toDos: Object.assign({}, prevState.toDos, { [id]: Object.assign({}, prevState.toDos[id], { text: text }) }) });
-                this._saveToDos(newState.toDos);
-                return Object.assign({}, newState);
-            });
-        };
-        this._saveToDos = (newToDos) => {
-            const saveToDos = react_native_1.AsyncStorage.setItem("toDos", JSON.stringify(newToDos));
-        };
-    }
+const mobx_react_1 = require("mobx-react");
+const Main_1 = __importDefault(require("./components/Main"));
+const todoStore_1 = __importDefault(require("./store/todoStore"));
+const store = new todoStore_1.default();
+class App extends React.Component {
     render() {
-        const { newToDo, loadedToDos, toDos } = this.state;
-        if (!loadedToDos) {
-            return <expo_1.AppLoading />;
-        }
-        return (<react_native_1.View style={styles.container}>
-        <react_native_1.StatusBar barStyle="light-content"/>
-        <react_native_1.Text style={styles.title}> Kwai To do </react_native_1.Text>
-        <react_native_1.View style={styles.card}>
-          <react_native_1.TextInput style={styles.input} placeholder={"New To Do"} value={newToDo} onChangeText={this._controlNewToDo} placeholderTextColor={"#999"} returnKeyType={"done"} autoCorrect={false} onSubmitEditing={this._addToDo} underlineColorAndroid={"transparent"}/>
-          <react_native_1.ScrollView contentContainerStyle={styles.toDos}>
-            {Object.values(toDos)
-            .reverse()
-            .map((toDo) => (<ToDo_1.default key={toDo.id} deleteToDo={this._deleteToDo} uncompleteToDo={this._uncompleteToDo} completeToDo={this._completeToDo} updateToDo={this._updateToDo} text={toDo.text} isCompleted={toDo.isCompleted} id={toDo.id}/>))}
-          </react_native_1.ScrollView>
-        </react_native_1.View>
-      </react_native_1.View>);
+        return (<mobx_react_1.Provider store={store}>
+        <Main_1.default />
+      </mobx_react_1.Provider>);
     }
 }
 exports.default = App;
-const styles = react_native_1.StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#F23657",
-        alignItems: "center"
-    },
-    title: {
-        color: "white",
-        fontSize: 30,
-        marginTop: 50,
-        fontWeight: "200",
-        marginBottom: 30
-    },
-    card: Object.assign({ backgroundColor: "white", flex: 1, width: width - 25, borderTopLeftRadius: 10, borderTopRightRadius: 10 }, react_native_1.Platform.select({
-        ios: {
-            shadowColor: "rgb(50, 50, 50)",
-            shadowOpacity: 0.5,
-            shadowRadius: 5,
-            shadowOffset: {
-                height: -1,
-                width: 0
-            }
-        },
-        android: {
-            elevation: 3
-        }
-    })),
-    input: {
-        padding: 20,
-        borderBottomColor: "#bbb",
-        borderBottomWidth: 1,
-        fontSize: 25
-    },
-    toDos: {
-        alignItems: "center"
-    }
-});
