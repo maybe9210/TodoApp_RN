@@ -33,13 +33,13 @@ class Main extends Component<any, IStates> {
       loadedToDos: false
     };
   }
-  componentDidMount = () => {
+  componentDidMount() {
     const { store } = this.props;
     store.loadToDo();
     this.setState({
       loadedToDos: true
     });
-  };
+  }
   render() {
     const { store } = this.props;
     const { newToDo, loadedToDos } = this.state;
@@ -65,18 +65,21 @@ class Main extends Component<any, IStates> {
           <ScrollView contentContainerStyle={styles.toDos}>
             {Object.values(store.todoList)
               .reverse()
-              .map((toDo: any) => (
-                <ToDo
-                  key={toDo.id}
-                  deleteToDo={this._deleteToDo}
-                  uncompleteToDo={this._uncompleteToDo}
-                  completeToDo={this._completeToDo}
-                  updateToDo={this._updateToDo}
-                  text={toDo.text}
-                  isCompleted={toDo.isCompleted}
-                  id={toDo.id}
-                />
-              ))}
+              .map((toDo: any) => {
+                console.log(toDo.id);
+                return (
+                  <ToDo
+                    key={toDo.id}
+                    deleteToDo={this._deleteToDo}
+                    uncompleteToDo={this._uncompleteToDo}
+                    completeToDo={this._completeToDo}
+                    updateToDo={this._updateToDo}
+                    text={toDo.text}
+                    isCompleted={toDo.isCompleted}
+                    id={toDo.id}
+                  />
+                );
+              })}
           </ScrollView>
         </View>
       </View>

@@ -34,13 +34,6 @@ const { width } = react_native_1.Dimensions.get("window");
 let Main = class Main extends react_1.Component {
     constructor(prop) {
         super(prop);
-        this.componentDidMount = () => {
-            const { store } = this.props;
-            store.loadToDo();
-            this.setState({
-                loadedToDos: true
-            });
-        };
         this._loadToDos = () => __awaiter(this, void 0, void 0, function* () {
             const { store } = this.props;
             store.loadToDo();
@@ -78,6 +71,13 @@ let Main = class Main extends react_1.Component {
             loadedToDos: false
         };
     }
+    componentDidMount() {
+        const { store } = this.props;
+        store.loadToDo();
+        this.setState({
+            loadedToDos: true
+        });
+    }
     render() {
         const { store } = this.props;
         const { newToDo, loadedToDos } = this.state;
@@ -92,7 +92,10 @@ let Main = class Main extends react_1.Component {
           <react_native_1.ScrollView contentContainerStyle={styles.toDos}>
             {Object.values(store.todoList)
             .reverse()
-            .map((toDo) => (<ToDo_1.default key={toDo.id} deleteToDo={this._deleteToDo} uncompleteToDo={this._uncompleteToDo} completeToDo={this._completeToDo} updateToDo={this._updateToDo} text={toDo.text} isCompleted={toDo.isCompleted} id={toDo.id}/>))}
+            .map((toDo) => {
+            console.log(toDo.id);
+            return (<ToDo_1.default key={toDo.id} deleteToDo={this._deleteToDo} uncompleteToDo={this._uncompleteToDo} completeToDo={this._completeToDo} updateToDo={this._updateToDo} text={toDo.text} isCompleted={toDo.isCompleted} id={toDo.id}/>);
+        })}
           </react_native_1.ScrollView>
         </react_native_1.View>
       </react_native_1.View>);
